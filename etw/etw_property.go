@@ -79,9 +79,6 @@ func (p *Property) MarshalJSON() ([]byte, error) {
 	})
 }
 
-// The global propertyPool is no longer used. Properties are now managed in
-// blocks by the EventRecordHelper for much higher performance.
-
 // Sets all fields of the struct to zero/empty values.
 // This is called by the helper before a property is reused.
 func (p *Property) reset() {
@@ -159,6 +156,37 @@ func (p *Property) ToGUID() (*GUID, error) {
 	return p.decodeGUIDIntype()
 }
 
+// ToString formats the property to a string.
+// This method is a convenient, safe wrapper around AppendText. It allocates a new
+// string for the result, making it safe to store. For performance-critical paths,
+// use AppendText with a reusable buffer.
+func (p *Property) ToString() (string, error) {
+	if p.value != "" {
+		return p.value, nil
+	}
+	if !p.Parseable() {
+		return "", nil
+	}
+
+	// Use the helper's reusable buffer for the temporary formatting.
+	start := len(p.erh.storage.dataBuffer)
+	buf, err := p.AppendText(p.erh.storage.dataBuffer)
+	if err != nil {
+		// On error, rewind the buffer to its original state.
+		p.erh.storage.dataBuffer = p.erh.storage.dataBuffer[:start]
+		return "", err
+	}
+
+	// Create a safe, independent copy of the formatted string for the user.
+	appended := buf[start:]
+	p.value = string(appended) // Cache the safe copy.
+
+	// Rewind the reusable buffer so it can be used by the next property.
+	p.erh.storage.dataBuffer = p.erh.storage.dataBuffer[:start]
+
+	return p.value, nil
+}
+
 // AppendText appends the textual representation of the property to the end of b
 // and returns the updated slice. It is a zero-allocation method.
 // The appended data is only valid for the lifecycle of the buffer.
@@ -192,10 +220,10 @@ func (p *Property) AppendText(buf []byte) ([]byte, error) {
 	return append(buf, val...), nil
 }
 
-// AppendToJSON appends the JSON representation of the property to the end of b
+// AppendToJson appends the JSON representation of the property to the end of b
 // and returns the updated slice. It is a zero-allocation method that handles
 // JSON-specific formatting like quoting strings.
-func (p *Property) AppendToJSON(buf []byte) ([]byte, error) {
+func (p *Property) AppendToJson(buf []byte) ([]byte, error) {
 	if !p.Parseable() {
 		return buf, fmt.Errorf("property not parseable")
 	}
@@ -224,37 +252,6 @@ func (p *Property) AppendToJSON(buf []byte) ([]byte, error) {
 		return buf, err
 	}
 	return strconv.AppendQuote(buf, val), nil
-}
-
-// ToString formats the property to a string.
-// This method is a convenient, safe wrapper around AppendText. It allocates a new
-// string for the result, making it safe to store. For performance-critical paths,
-// use AppendText with a reusable buffer.
-func (p *Property) ToString() (string, error) {
-	if p.value != "" {
-		return p.value, nil
-	}
-	if !p.Parseable() {
-		return "", nil
-	}
-
-	// Use the helper's reusable buffer for the temporary formatting.
-	start := len(p.erh.storage.dataBuffer)
-	buf, err := p.AppendText(p.erh.storage.dataBuffer)
-	if err != nil {
-		// On error, rewind the buffer to its original state.
-		p.erh.storage.dataBuffer = p.erh.storage.dataBuffer[:start]
-		return "", err
-	}
-
-	// Create a safe, independent copy of the formatted string for the user.
-	appended := buf[start:]
-	p.value = string(appended) // Cache the safe copy.
-
-	// Rewind the reusable buffer so it can be used by the next property.
-	p.erh.storage.dataBuffer = p.erh.storage.dataBuffer[:start]
-
-	return p.value, nil
 }
 
 // FormatToString is deprecated. Use ToString() for a safe string copy, or
@@ -288,11 +285,9 @@ func (p *Property) FormatToString() (string, error) {
 	// return p.value, err
 }
 
-// FormatToStringTdh formats the property data value to a string representation.
+// ToStringTdh formats the property data value to a string representation.
 // Uses TDH functions to parse the property (very slow, uses cgo for each prop)
-//
-// Deprecated: This method will be made private in a future version.
-func (p *Property) FormatToStringTdh() (string, error) {
+func (p *Property) ToStringTdh() (string, error) {
 	var err error
 
 	if p.value == "" && p.Parseable() {
@@ -316,10 +311,11 @@ func (p *Property) formatToStringTdh() (value string, udc uint16, err error) {
 			TDH_INTYPE_UINT16,
 			TDH_INTYPE_UINT32,
 			TDH_INTYPE_HEXINT32:
-			pMapName := (*uint16)(unsafe.Pointer(p.traceInfo.pointerOffset(uintptr(p.evtPropInfo.MapNameOffset()))))
+			pMapName := p.traceInfo.pointerOffset(uintptr(p.evtPropInfo.MapNameOffset()))
+			pMapNameW := (*uint16)(unsafe.Pointer(pMapName))
 			decSrc := p.traceInfo.DecodingSource
 			var mapInfoBuffer *EventMapInfoBuffer
-			mapInfoBuffer, err = p.erh.EventRec.GetMapInfo(pMapName, uint32(decSrc))
+			mapInfoBuffer, err = p.erh.EventRec.GetMapInfo(pMapNameW, uint32(decSrc))
 			if mapInfoBuffer != nil {
 				defer mapInfoBuffer.Release()
 			}
