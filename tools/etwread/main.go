@@ -220,16 +220,7 @@ func run() error {
 	}
 
 	// 5. Event Processing
-	c.EventCallback = func(e *etw.EventRecordHelper) error {
-		b, err := json.Marshal(e)
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "Error marshaling event: %v\n", err)
-			return nil // Continue processing other events
-		}
-		fmt.Println(string(b))
-		fmt.Println("--------------------------")
-		return nil
-	}
+	setEventCallback(c, debugLevel, ctx)
 
 	// 6. Setup Callbacks based on flags
 	// Kernel Event ID Filtering
@@ -244,11 +235,57 @@ func run() error {
 		}
 	}
 
-	// Debugging Output
-	if debugLevel != "" {
-		c.EventPreparedCallback = func(h *etw.EventRecordHelper) error {
+	// 7. Start Consumption
+	defer c.Stop()
+	if err := c.Start(); err != nil {
+		return fmt.Errorf("error starting consumer: %v", err)
+	}
+
+	// 8. Wait for Completion
+	if isRealtime {
+		fmt.Println("Tracing started. Press Ctrl+C to stop.")
+		<-ctx.Done() // Wait for signal
+		fmt.Println("\nSignal received, shutting down...")
+		//c.Abort()
+	} else {
+		c.Wait() // Wait for ETL file processing to finish
+		fmt.Println("\nETL file processing finished.")
+	}
+
+	traces := c.GetTraces()
+
+	// 9. Stop and Print Stats
+	c.Stop() // Signal consumer to stop processing.
+
+	fmt.Println("\n--- ETW Statistics ---")
+	printStats(c, traces)
+
+	if c.LastError() != nil {
+		return fmt.Errorf("an error occurred during processing: %v", c.LastError())
+	}
+
+	return nil
+}
+
+func setEventCallback(c *etw.Consumer, debugLevel string, ctx context.Context) {
+	c.EventCallback = func(h *etw.EventRecordHelper) error {
+		if ctx.Err() != nil {
+			return nil
+		}
+		if debugLevel != "" {
+			fmt.Println("---- EVENT ----")
+		}
+		b, err := h.MarshalJSON()
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Error marshaling event: %v\n", err)
+			return nil // Continue processing other events
+		}
+		fmt.Println(string(b))
+
+		if debugLevel != "" {
 			switch debugLevel {
 			case "lite":
+				fmt.Println("--- DEBUG ---")
 				var userDataHex string
 				if h.EventRec.UserDataLength > 0 {
 					userDataSlice := unsafe.Slice((*byte)(unsafe.Pointer(h.EventRec.UserData)),
@@ -267,44 +304,11 @@ func run() error {
 				fmt.Println("--- DEBUG TraceEventInfo ---")
 				infoBytes, _ := json.MarshalIndent(h.TraceInfo, "", "  ")
 				fmt.Println(string(infoBytes))
-			default:
-				fmt.Println("---- EVENT ----")
 			}
-
-			return nil
 		}
+		fmt.Println()
+		return nil
 	}
-
-	// 7. Start Consumption
-	defer c.Stop()
-	if err := c.Start(); err != nil {
-		return fmt.Errorf("error starting consumer: %v", err)
-	}
-
-	// 8. Wait for Completion
-	if isRealtime {
-		fmt.Println("Tracing started. Press Ctrl+C to stop.")
-		<-ctx.Done() // Wait for signal
-		fmt.Println("\nSignal received, shutting down...")
-	} else {
-		c.Wait() // Wait for ETL file processing to finish
-		fmt.Println("\nETL file processing finished.")
-	}
-
-	traces := c.GetTraces()
-
-	// 9. Stop and Print Stats
-	c.Stop() // Signal consumer to stop processing.
-	//<-done   // Wait for the event processing goroutine to finish flushing events.
-
-	fmt.Println("\n--- ETW Statistics ---")
-	printStats(c, traces)
-
-	if c.LastError() != nil {
-		return fmt.Errorf("an error occurred during processing: %v", c.LastError())
-	}
-
-	return nil
 }
 
 // printStats is a placeholder for printing consumer and trace statistics.

@@ -573,8 +573,9 @@ func (s *RealTimeSession) disableProvider(prov Provider) (err error) {
 // GetRundownEvents forces rundown events now on this session.
 // a null provider will force rundown for all manifest providers in the session
 //
-// NOTE: nt kernel sessions do not support SystemConfig rundown events. Access Denied.
+// NOTE: NT Kernel sessions do not support SystemConfig rundown events. Access Denied.
 // Just start a nt kernel session and stop it to get SystemConfig rundown events.
+// For NT Kernel Logger providers use RestartNtKernelProvider to force rundown.
 func (s *RealTimeSession) GetRundownEvents(guid *GUID) (err error) {
 	s.mu.Lock()
 	defer s.mu.Unlock()

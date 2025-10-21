@@ -260,7 +260,7 @@ func (e *EventRecordHelper) appendEventDataJSON(buf []byte) ([]byte, bool, error
 		buf = append(buf, `":`...)
 
 		var err error
-		buf, err = p.AppendToJSON(buf)
+		buf, err = p.AppendToJson(buf)
 		if err != nil {
 			buf = append(buf, `"failed to parse"`...)
 		}
@@ -299,7 +299,7 @@ func (e *EventRecordHelper) appendEventDataJSON(buf []byte) ([]byte, bool, error
 			}
 			// Array elements are always quoted strings in JSON
 			var err error
-			buf, err = p.AppendToJSON(buf)
+			buf, err = p.AppendToJson(buf)
 			if err != nil {
 				buf = append(buf, `"failed to parse"`...)
 			}
@@ -384,7 +384,7 @@ func (e *EventRecordHelper) appendStructsJSON(buf []byte, structs []map[string]*
 
 			// Append value using the zero-allocation property decoder.
 			var err error
-			buf, err = prop.AppendToJSON(buf)
+			buf, err = prop.AppendToJson(buf)
 			if err != nil {
 				// The buffer is in a partial state, but we return the error
 				// assuming the caller will discard the result.

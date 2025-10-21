@@ -361,6 +361,7 @@ func (t *TraceEventInfo) pointer() uintptr {
 	return uintptr(unsafe.Pointer(t))
 }
 
+// pointerOffset returns a pointer to the TraceEventInfo plus the given offset.
 func (t *TraceEventInfo) pointerOffset(offset uintptr) uintptr {
 	return t.pointer() + offset
 }

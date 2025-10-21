@@ -1416,7 +1416,7 @@ func (e *EventRecord) TimestampFromPropNanos(propTimestamp int64) int64 {
 // durations on the hot path.
 //
 // The conversion uses integer arithmetic.
-func (e *EventRecord) TimestampNanos() (int64) {
+func (e *EventRecord) TimestampNanos() int64 {
 	// userContext() will not be nil if The Consumer is running and processing events.
 	trace := e.userContext().trace
 
