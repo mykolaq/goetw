@@ -147,7 +147,7 @@ Define a struct that embeds your logger and holds the sampler.
 
 ````go
 import (
-    "github.com/tekert/goetw/logsampler"
+    "github.com/mykolaq/goetw/logsampler"
     "github.com/phuslu/log"
 )
 
@@ -186,7 +186,7 @@ import (
     "errors"
     "os"
     "time"
-    "github.com/tekert/goetw/logsampler"
+    "github.com/mykolaq/goetw/logsampler"
     "github.com/phuslu/log"
 )
 

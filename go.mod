@@ -1,4 +1,4 @@
-module github.com/tekert/goetw
+module github.com/mykolaq/goetw
 
 go 1.24
 

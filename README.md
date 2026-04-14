@@ -1,4 +1,4 @@
-[![GoDoc](https://pkg.go.dev/badge/github.com/tekert/goetw)](https://pkg.go.dev/github.com/tekert/goetw/etw?GOOS=windows)
+[![GoDoc](https://pkg.go.dev/badge/github.com/mykolaq/goetw)](https://pkg.go.dev/github.com/mykolaq/goetw/etw?GOOS=windows)
 ![Version](https://img.shields.io/github/v/tag/tekert/goetw?label=version)
 <!-- Coverage badge hidden but still accessible
  [![Coverage](https://raw.githubusercontent.com/tekert/goetw/master/.github/coverage/badge.svg)](https://raw.githubusercontent.com/tekert/goetw/refs/heads/fork/.github/coverage/coverage.txt)
@@ -23,7 +23,7 @@ import (
     "fmt"
     "time"
 
-    "github.com/tekert/goetw/etw"
+    "github.com/mykolaq/goetw/etw"
 )
 
 func main() {
@@ -81,7 +81,7 @@ import (
     "fmt"
     "time"
 
-    "github.com/tekert/goetw/etw"
+    "github.com/mykolaq/goetw/etw"
 )
 
 func main() {
@@ -133,7 +133,7 @@ import (
     "fmt"
     "time"
 
-    "github.com/tekert/goetw/etw"
+    "github.com/mykolaq/goetw/etw"
 )
 
 func main() {
@@ -185,7 +185,7 @@ import (
     "context"
     "fmt"
 
-    "github.com/tekert/goetw/etw"
+    "github.com/mykolaq/goetw/etw"
 )
 
 func main() {
