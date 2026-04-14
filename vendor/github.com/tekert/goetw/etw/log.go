@@ -9,8 +9,8 @@ import (
 	"os"
 	"time"
 
-	"github.com/mykolaq/goetw/logsampler"
-	"github.com/mykolaq/goetw/logsampler/adapters/phusluadapter"
+	"github.com/tekert/goetw/logsampler"
+	"github.com/tekert/goetw/logsampler/adapters/phusluadapter"
 
 	plog "github.com/phuslu/log"
 )

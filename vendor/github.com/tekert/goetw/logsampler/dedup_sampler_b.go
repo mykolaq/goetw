@@ -268,7 +268,7 @@ func (s *EventDrivenSampler) SetClock(c clock) {
 /*
 	goos: windows
 	goarch: amd64
-	pkg: github.com/mykolaq/goetw/logsampler
+	pkg: github.com/tekert/goetw/logsampler
 	cpu: AMD Ryzen 7 5700X3D 8-Core Processor
 	BenchmarkSamplers
 	BenchmarkSamplers/DeduplicatingSampler (goroutine)
@@ -293,11 +293,11 @@ func (s *EventDrivenSampler) SetClock(c clock) {
 	PASS
 
 
-	Running tool: C:\Program Files\Go\bin\go.exe test -benchmem -run=^$ -bench ^BenchmarkSamplers$ github.com/mykolaq/goetw/logsampler -v
+	Running tool: C:\Program Files\Go\bin\go.exe test -benchmem -run=^$ -bench ^BenchmarkSamplers$ github.com/tekert/goetw/logsampler -v
 
 goos: windows
 goarch: amd64
-pkg: github.com/mykolaq/goetw/logsampler
+pkg: github.com/tekert/goetw/logsampler
 cpu: AMD Ryzen 7 5700X3D 8-Core Processor
 BenchmarkSamplers
 BenchmarkSamplers/DeduplicatingSampler
@@ -330,11 +330,11 @@ BenchmarkSamplers/EventDrivenSampler/MultiCore_1024Keys-16
 PASS
 
 Improve performance dedup sampler:
-Running tool: C:\Program Files\Go\bin\go.exe test -benchmem -run=^$ -bench ^BenchmarkSamplers$ github.com/mykolaq/goetw/logsampler -v
+Running tool: C:\Program Files\Go\bin\go.exe test -benchmem -run=^$ -bench ^BenchmarkSamplers$ github.com/tekert/goetw/logsampler -v
 
 goos: windows
 goarch: amd64
-pkg: github.com/mykolaq/goetw/logsampler
+pkg: github.com/tekert/goetw/logsampler
 cpu: AMD Ryzen 7 5700X3D 8-Core Processor
 BenchmarkSamplers
 BenchmarkSamplers/DeduplicatingSampler
@@ -364,6 +364,6 @@ BenchmarkSamplers/EventDrivenSampler/MultiCore_1024Keys
 BenchmarkSamplers/EventDrivenSampler/MultiCore_1024Keys-16
  5623645	       210.6 ns/op	      13 B/op	       1 allocs/op
 PASS
-ok  	github.com/mykolaq/goetw/logsampler	10.119s
+ok  	github.com/tekert/goetw/logsampler	10.119s
 
 */
