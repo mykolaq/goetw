@@ -166,3 +166,40 @@ func (f *ExecutableNameFilter) build() (EventFilterDescriptor, any) {
 
 	return desc, &utf16Str
 }
+// RawProviderFilter allows passing custom filter payload directly to EnableTraceEx2.
+// Use for provider-specific filters (e.g. NDIS PacketCapture schematized filters).
+type RawProviderFilter struct {
+	filterType uint32
+	data       []byte
+}
+
+// NewRawProviderFilter creates a raw filter with arbitrary EVENT_FILTER_TYPE_*.
+func NewRawProviderFilter(filterType uint32, data []byte) *RawProviderFilter {
+	cp := make([]byte, len(data))
+	copy(cp, data)
+	return &RawProviderFilter{
+		filterType: filterType,
+		data:       cp,
+	}
+}
+
+// NewRawSchematizedFilter creates EVENT_FILTER_TYPE_SCHEMATIZED filter.
+func NewRawSchematizedFilter(data []byte) *RawProviderFilter {
+	return NewRawProviderFilter(EVENT_FILTER_TYPE_SCHEMATIZED, data)
+}
+
+// NewRawPayloadFilter creates EVENT_FILTER_TYPE_PAYLOAD filter.
+func NewRawPayloadFilter(data []byte) *RawProviderFilter {
+	return NewRawProviderFilter(EVENT_FILTER_TYPE_PAYLOAD, data)
+}
+
+func (f *RawProviderFilter) build() (EventFilterDescriptor, any) {
+	if f == nil || len(f.data) == 0 {
+		return EventFilterDescriptor{}, nil
+	}
+	return EventFilterDescriptor{
+		Ptr:  uint64(uintptr(unsafe.Pointer(&f.data[0]))),
+		Size: uint32(len(f.data)),
+		Type: f.filterType,
+	}, &f.data // keepAlive
+}
