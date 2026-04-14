@@ -38,7 +38,7 @@ import (
 	"path/filepath"
 	"runtime"
 
-	"github.com/tekert/goetw/internal/mofgen"
+	"github.com/mykolaq/goetw/internal/mofgen"
 )
 
 // findProjectRoot returns the absolute path to the project root directory

@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/tekert/goetw/internal/test"
+	"github.com/mykolaq/goetw/internal/test"
 )
 
 const (

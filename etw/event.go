@@ -8,7 +8,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/tekert/goetw/internal/hexf"
+	"github.com/mykolaq/goetw/internal/hexf"
 )
 
 const (

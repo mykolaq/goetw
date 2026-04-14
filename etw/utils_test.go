@@ -13,7 +13,7 @@ import (
 	"time"
 	"unsafe"
 
-	"github.com/tekert/goetw/internal/test"
+	"github.com/mykolaq/goetw/internal/test"
 )
 
 func TestUtils(t *testing.T) {

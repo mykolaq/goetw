@@ -15,7 +15,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/tekert/goetw/internal/test"
+	"github.com/mykolaq/goetw/internal/test"
 )
 
 const (

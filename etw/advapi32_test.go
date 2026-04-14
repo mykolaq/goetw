@@ -7,7 +7,7 @@ import (
 	"testing"
 	"unsafe"
 
-	"github.com/tekert/goetw/internal/test"
+	"github.com/mykolaq/goetw/internal/test"
 )
 
 func TestAccessString(t *testing.T) {

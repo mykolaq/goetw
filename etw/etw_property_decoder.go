@@ -20,7 +20,7 @@ import (
 	"unicode/utf8"
 	"unsafe"
 
-	"github.com/tekert/goetw/internal/hexf"
+	"github.com/mykolaq/goetw/internal/hexf"
 )
 
 var stringBufferPool = sync.Pool{

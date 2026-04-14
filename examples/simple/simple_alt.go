@@ -9,7 +9,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/tekert/goetw/etw"
+	"github.com/mykolaq/goetw/etw"
 )
 
 func main2() {

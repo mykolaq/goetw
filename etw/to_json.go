@@ -7,7 +7,7 @@ import (
 	"time"
 	"unsafe"
 
-	"github.com/tekert/goetw/internal/hexf"
+	"github.com/mykolaq/goetw/internal/hexf"
 )
 
 // This is called only for static analysis purposes, so it's not used often

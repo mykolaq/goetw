@@ -9,7 +9,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/tekert/goetw/internal/test"
+	"github.com/mykolaq/goetw/internal/test"
 )
 
 // TestProviderFiltering systematically tests filter support across different providers.

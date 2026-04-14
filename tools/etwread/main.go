@@ -18,7 +18,7 @@ import (
 	"time"
 
 	"github.com/goccy/go-json"
-	"github.com/tekert/goetw/etw"
+	"github.com/mykolaq/goetw/etw"
 )
 
 // TODO: Permissions for some providers

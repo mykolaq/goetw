@@ -8,7 +8,7 @@ import (
 	"strings"
 	"sync/atomic"
 
-	"github.com/tekert/goetw/logsampler"
+	"github.com/mykolaq/goetw/logsampler"
 
 	plog "github.com/phuslu/log"
 )

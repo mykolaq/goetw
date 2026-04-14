@@ -10,7 +10,7 @@ import (
 	"os"
 	"regexp"
 
-	"github.com/tekert/goetw/etw"
+	"github.com/mykolaq/goetw/etw"
 )
 
 type file struct {
